@@ -5,7 +5,8 @@
 #include "utils.h"
 
 #define CMAX 256
-#define uc unsigned char
+
+typedef unsigned char uc;
 
 static uc **alloc_matrix(int rows, int columns)
 {

@@ -16,11 +16,7 @@ static int check_intersect(circle_t *circles, int i, int j)
 	distance = (circles[j].a_x - circles[i].a_x) * (circles[j].a_x - circles[i].a_x) +
 					(circles[j].a_y - circles[i].a_y) * (circles[j].a_y - circles[i].a_y);
 
-	if (distance <= (circles[i].rad + circles[j].rad) * (circles[i].rad + circles[j].rad))
-		return 1;
-	
-	return 0;
-	
+	return distance <= (circles[i].rad + circles[j].rad) * (circles[i].rad + circles[j].rad);
 }
 
 int main()
