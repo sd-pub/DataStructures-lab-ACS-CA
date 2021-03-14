@@ -1,6 +1,8 @@
 #ifndef __LINKED_LIST_H_
 #define __LINKED_LIST_H_
 
+typedef unsigned int uint;
+
 typedef struct ll_node_t ll_node_t;
 struct ll_node_t
 {
@@ -17,13 +19,13 @@ struct linked_list_t
 };
 
 linked_list_t*
-ll_create(unsigned int data_size);
+ll_create(uint data_size);
 
 void
-ll_add_nth_node(linked_list_t* list, unsigned int n, const void* data);
+ll_add_nth_node(linked_list_t* list, long n, const void* new_data);
 
 ll_node_t*
-ll_remove_nth_node(linked_list_t* list, unsigned int n);
+ll_remove_nth_node(linked_list_t* list, long n);
 
 unsigned int
 ll_get_size(linked_list_t* list);
@@ -36,5 +38,24 @@ ll_print_int(linked_list_t* list);
 
 void
 ll_print_string(linked_list_t* list);
+
+void 
+ll_reverse_full_list(linked_list_t* list);
+
+void 
+ll_reverse(ll_node_t **node);
+
+void verify_c_print(linked_list_t *secondList, linked_list_t *fullList, int is_int, int is_string, int is_merged);
+
+void ll_free_all(linked_list_t **linkedList, linked_list_t **secondList, linked_list_t **fullList, int is_sec, int is_merged);
+
+linked_list_t
+*ll_merge_sorted_lists(linked_list_t *first_list, linked_list_t *second_list);
+
+void
+ll_add_middle_node(linked_list_t *list, const void *new_data);
+
+ll_node_t
+*ll_remove_middle_node(linked_list_t *list);
 
 #endif /* __LINKED_LIST_H_ */
