@@ -8,7 +8,7 @@
 typedef unsigned int uint;
 
 /* create a node with a given data and it's size */
-ll_node_t *create_node(const void *new_data, uint data_size)
+static ll_node_t *create_node(const void *new_data, uint data_size)
 {
 	ll_node_t *node;
 
@@ -24,7 +24,7 @@ ll_node_t *create_node(const void *new_data, uint data_size)
 }
 
 /* get the node from a given position */
-ll_node_t *get_nth_node(long n, linked_list_t *list)
+static ll_node_t *get_nth_node(long n, linked_list_t *list)
 {
 	ll_node_t *node;
 	int i;
@@ -236,6 +236,52 @@ ll_reverse(ll_node_t **node)
 }
 
 /* 311CAb problem | this is the function to merge two sorted lists */
+// linked_list_t
+// *ll_merge_sorted_lists(linked_list_t *first_list, linked_list_t *second_list)
+// {
+// 	linked_list_t *full_list = ll_create(first_list->data_size);
+// 	ll_node_t *curr_first, *curr_second;
+// 	full_list->data_size = first_list->data_size;
+	
+// 	curr_first = first_list->head;
+// 	curr_second = second_list->head;
+
+// 	while (curr_first && curr_second) {
+// 		if (first_list->data_size == 4) {
+// 			if (*(int *)curr_first->data < *(int *)curr_second->data) {
+// 				ll_add_nth_node(full_list, full_list->size, curr_first->data);
+// 				curr_first = curr_first->next;
+// 			} else {
+// 				ll_add_nth_node(full_list, full_list->size, curr_second->data);
+// 				curr_second = curr_second->next;
+// 			}
+// 		} else { 
+// 			if (strcmp((char *)curr_first->data, 
+// 						(char *)curr_second->data) < 0) {
+// 				ll_add_nth_node(full_list, full_list->size, curr_first->data);
+// 				curr_first = curr_first->next;
+
+// 			} else {
+// 				ll_add_nth_node(full_list, full_list->size, curr_second->data);
+// 				curr_second = curr_second->next;
+
+// 			}
+// 		}
+// 	}
+
+// 	while (curr_first) {
+// 		ll_add_nth_node(full_list, full_list->size, curr_first->data);
+// 		curr_first = curr_first->next;
+// 	}
+
+// 	while (curr_second) {
+// 		ll_add_nth_node(full_list, full_list->size, curr_second->data);
+// 		curr_second = curr_second->next;
+// 	}
+
+// 	return full_list;
+// }
+
 linked_list_t
 *ll_merge_sorted_lists(linked_list_t *first_list, linked_list_t *second_list)
 {
@@ -246,23 +292,27 @@ linked_list_t
 	curr_first = first_list->head;
 	curr_second = second_list->head;
 
+	// 1 2 3
+	// 0 10 25 30
+
+	// 0 1 2 3 
 	while (curr_first && curr_second) {
-		if (first_list->data_size != 1) {
+		if (first_list->data_size == 4) {
 			if (*(int *)curr_first->data < *(int *)curr_second->data) {
-				ll_add_nth_node(full_list, full_list->size, curr_first->data);
+				ll_add_nth_node(full_list, 0, curr_first->data);
 				curr_first = curr_first->next;
 			} else {
-				ll_add_nth_node(full_list, full_list->size, curr_second->data);
+				ll_add_nth_node(full_list, 0, curr_second->data);
 				curr_second = curr_second->next;
 			}
 		} else { 
 			if (strcmp((char *)curr_first->data, 
 						(char *)curr_second->data) < 0) {
-				ll_add_nth_node(full_list, full_list->size, curr_first->data);
+				ll_add_nth_node(full_list, 0, curr_first->data);
 				curr_first = curr_first->next;
 
 			} else {
-				ll_add_nth_node(full_list, full_list->size, curr_second->data);
+				ll_add_nth_node(full_list, 0, curr_second->data);
 				curr_second = curr_second->next;
 
 			}
@@ -270,14 +320,16 @@ linked_list_t
 	}
 
 	while (curr_first) {
-		ll_add_nth_node(full_list, full_list->size, curr_first->data);
+		ll_add_nth_node(full_list, 0, curr_first->data);
 		curr_first = curr_first->next;
 	}
 
 	while (curr_second) {
-		ll_add_nth_node(full_list, full_list->size, curr_second->data);
+		ll_add_nth_node(full_list, 0, curr_second->data);
 		curr_second = curr_second->next;
 	}
+
+	ll_reverse(&full_list->head);
 
 	return full_list;
 }
