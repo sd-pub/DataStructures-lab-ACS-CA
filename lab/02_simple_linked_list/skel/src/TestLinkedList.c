@@ -13,6 +13,8 @@ main()
 	int is_string = 0;
 	int is_sec = 0;
 	int is_merged = 0;
+	int is_split = 0;
+	int is_conc = 0;
 	while (1) {
 		char command[16], added_elem[64], *end_ptr;
 		char *sec_end_ptr, sec_added_elem[64];
@@ -47,10 +49,10 @@ main()
 			free(removed);
 		} else if (strcmp(command, "print") == 0) {
 			if (is_int == 1)
-				ll_print_int(linkedList);
+				ll_print_int(linkedList->head);
 
 			if (is_string == 1)
-				ll_print_string(linkedList);
+				ll_print_string(linkedList->head);
 		} else if (strcmp(command, "reverse") == 0) {
 			ll_reverse(&linkedList->head);
 
@@ -97,8 +99,28 @@ main()
 				ll_add_middle_node(linkedList, &new_nr);
 			else
 				ll_add_middle_node(linkedList, new_end_ptr);
+
+		} else if (strcmp(command, "split_list") == 0) {
+			ll_split_list(linkedList);
+			is_split = 1;
+		} else if (strcmp(command, "alternate") == 0) {
+			ll_node_t *alternated_list = ll_alternate_lists(linkedList, 
+											secondList);
+			
+			ll_print_int(alternated_list);
+
+			ll_free_node(alternated_list);
+			free(linkedList);
+			free(secondList);
+
+			is_conc = 1;
+
+		} else if (strcmp(command, "palindrome") == 0) {
+			ll_list_of_palindrome(linkedList);
 		} else if (strcmp(command, "free") == 0) {
-			ll_free_all(&linkedList, &secondList, &fullList, is_sec, is_merged);
+			if (is_conc == 0)
+				ll_free_all(&linkedList, &secondList, &fullList, is_sec, is_merged,
+							is_split);
 			
 			break;
 		}

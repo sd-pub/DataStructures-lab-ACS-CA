@@ -34,10 +34,10 @@ void
 ll_free(linked_list_t** pp_list);
 
 void
-ll_print_int(linked_list_t* list);
+ll_print_int(ll_node_t* list);
 
 void
-ll_print_string(linked_list_t* list);
+ll_print_string(ll_node_t *list);
 
 void 
 ll_reverse_full_list(linked_list_t* list);
@@ -47,7 +47,9 @@ ll_reverse(ll_node_t **node);
 
 void verify_c_print(linked_list_t *secondList, linked_list_t *fullList, int is_int, int is_string, int is_merged);
 
-void ll_free_all(linked_list_t **linkedList, linked_list_t **secondList, linked_list_t **fullList, int is_sec, int is_merged);
+void ll_free_all(linked_list_t **linkedList, linked_list_t **secondList, 
+				 linked_list_t **fullList, int is_sec, int is_merged, 
+				 int is_split);
 
 linked_list_t
 *ll_merge_sorted_lists(linked_list_t *first_list, linked_list_t *second_list);
@@ -57,5 +59,19 @@ ll_add_middle_node(linked_list_t *list, const void *new_data);
 
 ll_node_t
 *ll_remove_middle_node(linked_list_t *list);
+
+void
+ll_split_list(linked_list_t *list);
+
+void 
+ll_move_node(ll_node_t **destination, ll_node_t **source);
+
+void ll_free_node(ll_node_t *head);
+
+ll_node_t
+*ll_alternate_lists(linked_list_t *list, linked_list_t *secondlist);
+
+void
+ll_list_of_palindrome(linked_list_t *list);
 
 #endif /* __LINKED_LIST_H_ */

@@ -156,7 +156,7 @@ ll_free(linked_list_t** pp_list)
 
 /* print a list that contains int datas */
 void
-ll_print_int(linked_list_t* list)
+ll_print_int(ll_node_t *list)
 {
 	ll_node_t *curr;
 
@@ -164,7 +164,7 @@ ll_print_int(linked_list_t* list)
 		return;
 	}
 
-	curr = list->head;
+	curr = list;
 	
 	while (curr != NULL) {
 		printf("%d ", *(int *)curr->data);
@@ -176,7 +176,7 @@ ll_print_int(linked_list_t* list)
 
 /* print a list that contains string datas */
 void
-ll_print_string(linked_list_t* list)
+ll_print_string(ll_node_t *list)
 {
 	ll_node_t *curr;
 
@@ -184,7 +184,7 @@ ll_print_string(linked_list_t* list)
 		return;
 	}
 
-	curr = list->head;
+	curr = list;
 	
 	while (curr != NULL) {
 		printf("%s ", (char *)curr->data);
@@ -235,53 +235,6 @@ ll_reverse(ll_node_t **node)
 	*node = prev;
 }
 
-/* 311CAb problem | this is the function to merge two sorted lists */
-// linked_list_t
-// *ll_merge_sorted_lists(linked_list_t *first_list, linked_list_t *second_list)
-// {
-// 	linked_list_t *full_list = ll_create(first_list->data_size);
-// 	ll_node_t *curr_first, *curr_second;
-// 	full_list->data_size = first_list->data_size;
-	
-// 	curr_first = first_list->head;
-// 	curr_second = second_list->head;
-
-// 	while (curr_first && curr_second) {
-// 		if (first_list->data_size == 4) {
-// 			if (*(int *)curr_first->data < *(int *)curr_second->data) {
-// 				ll_add_nth_node(full_list, full_list->size, curr_first->data);
-// 				curr_first = curr_first->next;
-// 			} else {
-// 				ll_add_nth_node(full_list, full_list->size, curr_second->data);
-// 				curr_second = curr_second->next;
-// 			}
-// 		} else { 
-// 			if (strcmp((char *)curr_first->data, 
-// 						(char *)curr_second->data) < 0) {
-// 				ll_add_nth_node(full_list, full_list->size, curr_first->data);
-// 				curr_first = curr_first->next;
-
-// 			} else {
-// 				ll_add_nth_node(full_list, full_list->size, curr_second->data);
-// 				curr_second = curr_second->next;
-
-// 			}
-// 		}
-// 	}
-
-// 	while (curr_first) {
-// 		ll_add_nth_node(full_list, full_list->size, curr_first->data);
-// 		curr_first = curr_first->next;
-// 	}
-
-// 	while (curr_second) {
-// 		ll_add_nth_node(full_list, full_list->size, curr_second->data);
-// 		curr_second = curr_second->next;
-// 	}
-
-// 	return full_list;
-// }
-
 linked_list_t
 *ll_merge_sorted_lists(linked_list_t *first_list, linked_list_t *second_list)
 {
@@ -291,11 +244,7 @@ linked_list_t
 	
 	curr_first = first_list->head;
 	curr_second = second_list->head;
-
-	// 1 2 3
-	// 0 10 25 30
-
-	// 0 1 2 3 
+ 
 	while (curr_first && curr_second) {
 		if (first_list->data_size == 4) {
 			if (*(int *)curr_first->data < *(int *)curr_second->data) {
@@ -338,29 +287,36 @@ linked_list_t
 void verify_c_print(linked_list_t *secondList, linked_list_t *fullList, int is_int, int is_string, int is_merged)
 {
 	if (is_int == 1)
-		ll_print_int(secondList);
+		ll_print_int(secondList->head);
 		
 	if (is_string == 1)
-		ll_print_string(secondList);
+		ll_print_string(secondList->head);
 
 	if (is_merged == 1) {
 		if (is_int == 1)
-			ll_print_int(fullList);
+			ll_print_int(fullList->head);
 		
 		if (is_string == 1)
-			ll_print_string(fullList);
+			ll_print_string(fullList->head);
 	}
 }
 
 /* function to free all linked lists */
-void ll_free_all(linked_list_t **linkedList, linked_list_t **secondList, linked_list_t **fullList, int is_sec, int is_merged)
+void ll_free_all(linked_list_t **linkedList, linked_list_t **secondList, 
+				 linked_list_t **fullList, int is_sec, int is_merged, 
+				 int is_split)
 {
-	ll_free(linkedList);
+	if (is_split == 0) 
+		ll_free(linkedList);
+	else
+		return;
 
-			if (is_sec == 1)
-				ll_free(secondList);
-			if (is_merged == 1)
-				ll_free(fullList);
+	if (is_sec == 1)
+		ll_free(secondList);
+	
+	if (is_merged == 1)
+		ll_free(fullList);
+	
 }
 
 /* 312CAb problem | add a node to the middle of the list */
@@ -404,4 +360,139 @@ ll_node_t
 	n = (list->size  - 1) / 2;
 
 	return ll_remove_nth_node(list, n);
+}
+
+/* remove a given node */
+void ll_free_node(ll_node_t *head)
+{
+	ll_node_t *rem;
+
+	
+	while (NULL != head) {
+		rem = head;
+		head = head->next;
+		free(rem->data);
+		free(rem);
+
+	}
+
+}
+
+/* 313CAa problem | split a list into two lists alternating of
+the position of every node */
+void
+ll_split_list(linked_list_t *list)
+{
+	ll_node_t *even = NULL;
+	ll_node_t *odd = NULL;
+
+	ll_node_t *current = list->head;
+
+	
+	while (current != NULL) {
+		ll_move_node(&even, &current);
+
+		if (current != NULL)
+			ll_move_node(&odd, &current);
+
+	}
+
+	ll_reverse(&even);
+	ll_reverse(&odd);
+
+	/* made this here so i shouldnt have to make more functions */
+	if (list->data_size == 4) {
+		ll_print_int(even);
+		ll_print_int(odd);
+
+	} else {
+		ll_print_string(even);
+		ll_print_string(odd);	
+
+	}
+
+	ll_free_node(even);
+	ll_free_node(odd);
+	free(list);
+}
+
+/* move the node from a source to a destination */
+void ll_move_node(ll_node_t **destination, ll_node_t **source)
+{
+	if (*source == NULL)
+		return;
+
+	ll_node_t *new_node = *source;
+	*source = (*source)->next;
+	new_node->next = *destination;
+	*destination = new_node;
+}
+
+/* 313CAb problem | alternate two lists into one */
+ll_node_t
+*ll_alternate_lists(linked_list_t *list, linked_list_t *secondlist)
+{
+	ll_node_t *first = list->head;
+	ll_node_t *second = secondlist->head;
+	ll_node_t *alternated = NULL;
+
+
+	while (first && second) {
+		ll_move_node(&alternated, &first);
+		
+		ll_move_node(&alternated, &second);
+	}
+
+	ll_reverse(&alternated);
+
+	return alternated;
+}
+
+/* copy a list into another, it works but not properly, the old list points to
+NULL after i copy it, so i guess i need some help */
+linked_list_t
+*ll_copy_list(linked_list_t *list)
+{
+	linked_list_t *copy_list;
+	
+	copy_list = ll_create(list->data_size);
+	
+	while (list->head) {
+		ll_add_nth_node(copy_list, 0, list->head->data);
+		list->head = list->head->next;
+	}
+
+	return copy_list;
+}
+
+/* 315CAb problem | check if a list contains a palindrome */
+void
+ll_list_of_palindrome(linked_list_t *list)
+{
+	linked_list_t *copy_list;
+	int cnt = 0;
+
+	copy_list = ll_copy_list(list);
+
+	ll_print_string(list->head);
+	ll_print_string(copy_list->head);
+
+	while (list->head && copy_list->head) {
+		if ((char *)list->head->data == (char *)copy_list->head->data)
+			cnt++;
+		
+		list->head = list->head->next;
+		copy_list->head = copy_list->head->next;
+	}
+
+	ll_print_string(list->head);
+	ll_print_string(copy_list->head);
+
+	if ((uint) cnt == list->size)
+		fprintf(stdout, "the list is a palindrome");
+	else
+		fprintf(stdout, "the list is not a palindrome");
+
+	ll_free(&list);
+	ll_free(&copy_list);
 }
