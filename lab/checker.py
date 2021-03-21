@@ -30,6 +30,7 @@ labs = {
             "tasks" : 1,
             "points": [50] },
     3   : { "name" : "03_double_linked_list",
+            "points": [50],
             "tasks" : 1 },
     4   : { "name" : "04_hashmap",
             "tasks" : 1 },
