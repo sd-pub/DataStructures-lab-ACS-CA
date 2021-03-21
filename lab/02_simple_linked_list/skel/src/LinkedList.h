@@ -63,9 +63,6 @@ ll_node_t
 void
 ll_split_list(linked_list_t *list);
 
-void 
-ll_move_node(ll_node_t **destination, ll_node_t **source);
-
 void ll_free_node(ll_node_t *head);
 
 ll_node_t
@@ -73,5 +70,6 @@ ll_node_t
 
 void
 ll_list_of_palindrome(linked_list_t *list);
+
 
 #endif /* __LINKED_LIST_H_ */

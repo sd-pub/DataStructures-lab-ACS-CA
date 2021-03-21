@@ -235,6 +235,7 @@ ll_reverse(ll_node_t **node)
 	*node = prev;
 }
 
+/* merge sorted lists */
 linked_list_t
 *ll_merge_sorted_lists(linked_list_t *first_list, linked_list_t *second_list)
 {
@@ -246,7 +247,7 @@ linked_list_t
 	curr_second = second_list->head;
  
 	while (curr_first && curr_second) {
-		if (first_list->data_size == 4) {
+		if (first_list->data_size == sizeof(int)) {
 			if (*(int *)curr_first->data < *(int *)curr_second->data) {
 				ll_add_nth_node(full_list, 0, curr_first->data);
 				curr_first = curr_first->next;
@@ -401,7 +402,7 @@ ll_split_list(linked_list_t *list)
 	ll_reverse(&odd);
 
 	/* made this here so i shouldnt have to make more functions */
-	if (list->data_size == 4) {
+	if (list->data_size == sizeof(int)) {
 		ll_print_int(even);
 		ll_print_int(odd);
 
@@ -417,7 +418,7 @@ ll_split_list(linked_list_t *list)
 }
 
 /* move the node from a source to a destination */
-void ll_move_node(ll_node_t **destination, ll_node_t **source)
+static void ll_move_node(ll_node_t **destination, ll_node_t **source)
 {
 	if (*source == NULL)
 		return;
@@ -462,6 +463,7 @@ linked_list_t
 		list->head = list->head->next;
 	}
 
+
 	return copy_list;
 }
 
@@ -474,16 +476,18 @@ ll_list_of_palindrome(linked_list_t *list)
 
 	copy_list = ll_copy_list(list);
 
+	ll_reverse(&copy_list->head);
+
 	ll_print_string(list->head);
 	ll_print_string(copy_list->head);
 
-	while (list->head && copy_list->head) {
-		if ((char *)list->head->data == (char *)copy_list->head->data)
-			cnt++;
+	// while (list->head && copy_list->head) {
+	// 	if ((char *)list->head->data == (char *)copy_list->head->data)
+	// 		cnt++;
 		
-		list->head = list->head->next;
-		copy_list->head = copy_list->head->next;
-	}
+	// 	list->head = list->head->next;
+	// 	copy_list->head = copy_list->head->next;
+	// }
 
 	ll_print_string(list->head);
 	ll_print_string(copy_list->head);
