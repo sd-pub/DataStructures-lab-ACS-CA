@@ -73,4 +73,13 @@ dll_node_t
 void
 dll_add_middle_node(doubly_linked_list_t *list, const void *new_data);
 
+dll_node_t
+*dll_add_sum_of_pairs(doubly_linked_list_t *list);
+
+void
+dll_check_if_palindrome(doubly_linked_list_t *list);
+
+doubly_linked_list_t
+*dll_add_sum_of_two_nums(doubly_linked_list_t *list, doubly_linked_list_t *secondlist);
+
 #endif /* __CIRCULAR_DOUBLY_LINKED_LIST_H_*/

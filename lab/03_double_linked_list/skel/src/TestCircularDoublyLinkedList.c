@@ -97,6 +97,15 @@ int main() {
 
 			free(removed_middle->data);
 			free(removed_middle);
+		} else if (strcmp(command, "funky") == 0) {
+			doublyLinkedList->head = dll_add_sum_of_pairs(doublyLinkedList);		
+		} else if (strcmp(command, "palindrome") == 0) {
+			dll_check_if_palindrome(doublyLinkedList);	
+		} else if (strcmp(command, "sum_of_nums") == 0) {
+			sumlist = dll_add_sum_of_two_nums(doublyLinkedList, secondlist);
+			dll_print_int_list(sumlist);
+
+			is_sum = 1;
 		} else if (strcmp(command, "free") == 0) {
 			dll_free(&doublyLinkedList);
 			if (is_sum == 1) {
