@@ -75,12 +75,6 @@ dll_add_nth_node(doubly_linked_list_t* list, uint n, const void* data)
 		return;
 	}
 
-	if (!list->size) {
-		fprintf(stdout, "There are zero nodes in the list\n");
-		free(list);
-		return;
-	}
-
 	if (n >= list-> size)
 		n = list->size;
 
@@ -298,7 +292,32 @@ doubly_linked_list_t
 
 /* function to add a given node at the end of the list */
 static void
-dll_insert_end(dll_node_t **head, dll_node_t * new_node) 
+dll_insert_end(dll_node_t **head, const void* new_data) 
+{
+	dll_node_t *last, *new_node;
+
+	new_node = create_node(new_data, sizeof(int));
+	
+	if (*head == NULL) {
+		new_node->next = new_node->prev = new_node;
+		*head = new_node;
+		return;
+	}
+
+	last = (*head)->prev;
+
+	new_node->next = *head;
+	(*head)->prev = new_node;
+
+	new_node->prev = last;	
+	last->next = new_node;
+
+	
+}
+
+/* function to add a given node at the end of the list */
+static void
+dll_move_end(dll_node_t **head, dll_node_t * new_node) 
 {
 	dll_node_t *last;
 
@@ -334,10 +353,10 @@ dll_node_t
 	while (curr->prev != last) {
 		prev = curr->prev;
 
-		dll_insert_end(&new_head, curr);
+		dll_move_end(&new_head, curr);
 		curr = prev;
 	}
-	dll_insert_end(&new_head, curr);
+	dll_move_end(&new_head, curr);
 
 	return new_head;
 }
@@ -393,10 +412,10 @@ doubly_linked_list_t
 			sum = *(int *) curr_one->data;
 		else
 			sum = *(int *) curr_one->data + *(int *)curr_sec->data;
-		
-		dll_add_nth_node(newlist, 0, &sum);
-		//dll_insert_end(&newlist->head, )
-		
+
+		dll_insert_end(&newlist->head, &sum);
+		newlist->size++;
+
 		curr_one = curr_one->next;
 		curr_sec = curr_sec->next;
 	}
@@ -543,7 +562,7 @@ dll_node_t
 dll_node_t
 *dll_add_sum_of_pairs(doubly_linked_list_t *list)
 {
-	dll_node_t *curr, *next;
+	dll_node_t *curr, *next, *newnode;
 	uint n = list->size;
 	int sum;
 
@@ -551,7 +570,16 @@ dll_node_t
 	next = list->head->next;
 	for (uint i = 0; i < n - 1; i++) {
 		sum = *(int *) curr->data + *(int *) next->data;
-		dll_add_nth_node(list, 2 * i + 1, &sum);
+
+		newnode = create_node(&sum, list->data_size);
+
+		newnode->next = next;
+		newnode->prev = curr;
+		curr->next = newnode;
+		next->prev = newnode;
+
+		list->size++;
+
 		curr = curr->next->next;
 		next = next->next;
 	}
@@ -616,8 +644,9 @@ doubly_linked_list_t
 			carry = 0;
 		}
 
-		dll_add_nth_node(sumlist, 0, &sum);
-
+		dll_insert_end(&sumlist->head, &sum);
+		sumlist->size++;
+		
 		sum += carry;
 		
 		curr_one = curr_one->next;
@@ -625,9 +654,10 @@ doubly_linked_list_t
 
 	}
 
-	if (carry == 1)
-		dll_add_nth_node(sumlist, 0, &carry);
-
-	sumlist->head = dll_reverse(sumlist->head);
+	if (carry == 1) {
+		dll_insert_end(&sumlist->head, &sum);
+		sumlist->size++;
+	}
+	
 	return sumlist;
 }
