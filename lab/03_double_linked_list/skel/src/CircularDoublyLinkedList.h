@@ -51,4 +51,35 @@ dll_print_ints_left_circular(dll_node_t* start);
 
 void
 dll_print_ints_right_circular(dll_node_t* start);
+
+doubly_linked_list_t
+*dll_remove_duplicates(doubly_linked_list_t *list);
+
+dll_node_t
+*dll_reverse(dll_node_t *list);
+
+doubly_linked_list_t
+*dll_sum_of_lists(doubly_linked_list_t *list, doubly_linked_list_t *secondlist);
+
+doubly_linked_list_t
+*dll_merge_sorted_lists(doubly_linked_list_t *first_list, doubly_linked_list_t *second_list);
+
+dll_node_t
+*dll_less_than_value(doubly_linked_list_t *list, int value);
+
+dll_node_t
+*dll_remove_middle_node(doubly_linked_list_t *list);
+
+void
+dll_add_middle_node(doubly_linked_list_t *list, const void *new_data);
+
+dll_node_t
+*dll_add_sum_of_pairs(doubly_linked_list_t *list);
+
+void
+dll_check_if_palindrome(doubly_linked_list_t *list);
+
+doubly_linked_list_t
+*dll_add_sum_of_two_nums(doubly_linked_list_t *list, doubly_linked_list_t *secondlist);
+
 #endif /* __CIRCULAR_DOUBLY_LINKED_LIST_H_*/
