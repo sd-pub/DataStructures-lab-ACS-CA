@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_STRING_SIZE 64
 
@@ -15,6 +16,7 @@ main()
 	int is_merged = 0;
 	int is_split = 0;
 	int is_conc = 0;
+	bool palindrome;
 	while (1) {
 		char command[16], added_elem[64], *end_ptr;
 		char *sec_end_ptr, sec_added_elem[64];
@@ -116,7 +118,28 @@ main()
 			is_conc = 1;
 
 		} else if (strcmp(command, "palindrome") == 0) {
-			ll_list_of_palindrome(linkedList);
+			palindrome = ll_is_palindrome(linkedList->head);
+			if (palindrome == 1)
+				printf("there is a palindrome\n");
+			else
+				printf("there is not a palindrome\n");
+		} else if (strcmp(command, "sort_list") == 0) {
+			ll_node_t *sortedList;
+			sortedList = sort_list(linkedList->head);
+			ll_print_int(sortedList);
+			
+		} else if (strcmp(command, "intersect") == 0) {
+			ll_node_t *intersect = ll_intersect_of_lists(linkedList->head, secondList->head);
+
+			ll_print_int(intersect);
+
+			ll_free_node(intersect);
+			free(linkedList);
+			free(secondList);
+		} else if (strcmp(command, "remove_from_end") == 0) {
+			scanf("%ld", &pos);
+			linkedList->head = remove_nth_node_from_end(linkedList->head, pos);
+			linkedList->size--;
 		} else if (strcmp(command, "free") == 0) {
 			if (is_conc == 0)
 				ll_free_all(&linkedList, &secondList, &fullList, is_sec, is_merged,
@@ -127,3 +150,4 @@ main()
 	}
 	return 0;
 }
+
