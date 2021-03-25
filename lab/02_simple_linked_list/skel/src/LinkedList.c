@@ -622,50 +622,51 @@ ll_node_t
 	return ptrA;
 }
 
-void
-swap_nodes (ll_node_t *first, ll_node_t *second)
+ll_node_t * merge(ll_node_t * l1, ll_node_t * l2)
 {
-	ll_node_t *f_prev, *s_prev;
-	f_prev = first;
-	s_prev = second;
-
-	f_prev->next = second->next;
-	s_prev->next = first->next;
-}
-
-void swap_nodes(ll_node_t *a, ll_node_t *b)
-{
-    int temp = a->data;
-    a->data = b->data;
-    b->data = temp;
-}
-
-/* 148th problem from leetcode || sort a list*/
-ll_node_t 
-*sort_list_cf(ll_node_t *head)
-{
-	ll_node_t *first, *second;
-	int n = ll_get_size(head);
+	ll_node_t * dump;
+	ll_node_t * cur = &dump;
 	
-	first = head;
-	second = head->next;
-
-	for (int i = 0; i < n; i++) {
-		for (int j = i + 1; j < n; j++) {
-			if (*(int*)first->data > *(int*)second->data)
-				swap_nodes(first->data, second->data);
-			second = second->next;
+	while (l1 != NULL && l2 != NULL) {
+		if (*(int *)l1->data < *(int *)l2->data) {
+			cur->next = l1;
+			l1 = l1->next;
+		} else {
+			cur->next = l2;
+			l2 = l2->next;
 		}
-
-		second = head->next;
-
-		for (int k = 0; k < n; k++)
-			second = second->next;
-
-		first = first->next;
+			
+		cur = cur->next;
 	}
-	return NULL;
+	
+	if (l1 != NULL)
+		cur->next = l1;
+	else
+		cur->next = l2;
+		
+	return dump->next;
 }
+
+/* 148th problem from leetcod | sort a list with merge sort implementation */
+ll_node_t * sortList(ll_node_t * head) 
+{
+	if (head == NULL || head->next == NULL)
+		return head;
+	
+	ll_node_t * slow = head;
+	ll_node_t * fast = head->next;
+	
+	while (fast != NULL && fast->next != NULL) {
+		slow = slow->next;
+		fast = fast->next->next;
+	}
+	
+	fast = slow->next;
+	slow->next = NULL;
+	
+	return merge(sortList(head), sortList(fast));
+}
+
 
 /* 141th problem from leetcode | check if there is a cycle in the list */
 bool
