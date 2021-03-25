@@ -524,9 +524,12 @@ ll_node_t
 		second = second->next;
 		first = first->next;
 	}
-
+	ll_node_t *rem = second->next;
 	second->next = second->next->next;
 
+	free(rem->data);
+	free(rem);
+	
 	return head;
 }
 
