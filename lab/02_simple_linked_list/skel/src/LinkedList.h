@@ -1,5 +1,6 @@
 #ifndef __LINKED_LIST_H_
 #define __LINKED_LIST_H_
+#include <stdbool.h>
 
 typedef unsigned int uint;
 
@@ -27,8 +28,8 @@ ll_add_nth_node(linked_list_t* list, long n, const void* new_data);
 ll_node_t*
 ll_remove_nth_node(linked_list_t* list, long n);
 
-unsigned int
-ll_get_size(linked_list_t* list);
+int
+ll_get_size(ll_node_t *head);
 
 void
 ll_free(linked_list_t** pp_list);
@@ -71,5 +72,16 @@ ll_node_t
 void
 ll_list_of_palindrome(linked_list_t *list);
 
+ll_node_t
+*remove_nth_node_from_end(ll_node_t *head, int n);
+
+bool
+ll_is_palindrome(ll_node_t *head);
+
+ll_node_t 
+*ll_intersect_of_lists(ll_node_t *headOne, ll_node_t *headTwo);
+
+ll_node_t
+*sort_list(ll_node_t* head); 
 
 #endif /* __LINKED_LIST_H_ */

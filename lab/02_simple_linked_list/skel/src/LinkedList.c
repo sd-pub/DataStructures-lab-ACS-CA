@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "LinkedList.h"
 #include "utils.h"
@@ -128,10 +129,14 @@ ll_remove_nth_node(linked_list_t* list, long n)
 }
 
 /* get the size of a list */
-uint
-ll_get_size(linked_list_t* list)
+int
+ll_get_size(ll_node_t* head)
 {
-	return list->size;
+	int i;
+	for (i = 0; head; i++)
+		head = head->next;
+
+	return i;
 }
 
 /* free the memory allocated from a list */
@@ -379,6 +384,18 @@ void ll_free_node(ll_node_t *head)
 
 }
 
+/* move the node from a source to a destination */
+static void ll_move_node(ll_node_t **destination, ll_node_t **source)
+{
+	if (*source == NULL)
+		return;
+
+	ll_node_t *new_node = *source;
+	*source = (*source)->next;
+	new_node->next = *destination;
+	*destination = new_node;
+}
+
 /* 313CAa problem | split a list into two lists alternating of
 the position of every node */
 void
@@ -415,18 +432,6 @@ ll_split_list(linked_list_t *list)
 	ll_free_node(even);
 	ll_free_node(odd);
 	free(list);
-}
-
-/* move the node from a source to a destination */
-static void ll_move_node(ll_node_t **destination, ll_node_t **source)
-{
-	if (*source == NULL)
-		return;
-
-	ll_node_t *new_node = *source;
-	*source = (*source)->next;
-	new_node->next = *destination;
-	*destination = new_node;
 }
 
 /* 313CAb problem | alternate two lists into one */
@@ -499,4 +504,186 @@ ll_list_of_palindrome(linked_list_t *list)
 
 	ll_free(&list);
 	ll_free(&copy_list);
+}
+
+/* 19th problem from leetcode || Remove nth node from end of list */
+ll_node_t
+*remove_nth_node_from_end(ll_node_t *head, int n)
+{
+	ll_node_t *first, *second;
+
+	first = second = head;
+
+	for (int i = 0; i < n; i++) {
+		first = first->next;
+		if (!first)
+			return head->next;
+	}
+
+	while (first->next != NULL) {
+		second = second->next;
+		first = first->next;
+	}
+	ll_node_t *rem = second->next;
+	second->next = second->next->next;
+
+	free(rem->data);
+	free(rem);
+	
+	return head;
+}
+
+/* reverse half a list and return the end point and the start point of it*/
+static void
+ll_reverse_half(ll_node_t *head, int n, ll_node_t **left_head_ptr, 
+				ll_node_t **right_head_ptr)
+{
+	ll_node_t *prev = NULL;
+	
+	for (int i = 0; i < n / 2 && head; i++) {
+		ll_node_t *temp = head->next;
+		head->next = prev;
+		prev = head;
+		head = temp;
+	}
+
+	*left_head_ptr = prev;
+	*right_head_ptr = head;
+}
+
+/* repair the list after reversing it */
+static void
+ll_repair_half(ll_node_t *left, ll_node_t *right)
+{
+	 while (left) {
+		ll_node_t *temp = left->next;
+		left->next = right;
+		right = left;
+		left = temp;
+	}
+}
+
+
+/* 234th problem from leetcode || 315CAb || O(n) - time and O(1) - space */
+bool
+ll_is_palindrome(ll_node_t *head)
+{
+	int n = ll_get_size(head);
+
+	ll_node_t* left_head;
+	ll_node_t* right_head;
+	ll_reverse_half(head, n, &left_head, &right_head);
+	
+	ll_node_t* left = left_head;
+	ll_node_t* right = right_head;
+	
+	if (n % 2 == 1)
+		right = right->next;
+
+	
+	while (left || right) {
+		if (*(int*)left->data != *(int*)right->data) {
+			ll_repair_half(left_head, right_head);
+			return false;
+		}
+
+		left = left->next;
+		right = right->next;
+	}
+	
+	ll_repair_half(left_head, right_head);
+
+	return true;  
+}
+
+/* 237th problem from leetcode || remove given node of a list */
+void ll_remove_node(ll_node_t *node)
+{
+	ll_node_t *dummy;
+	dummy = node->next;
+
+	memcpy(node->data, dummy->data, sizeof(int));
+
+	node->next = node->next->next;
+
+	free(dummy);
+	free(dummy->data);
+}
+
+/* 160th problem from leetcode || intersect value of two lists */
+ll_node_t 
+*ll_intersect_of_lists(ll_node_t *headOne, ll_node_t *headTwo)
+{
+	ll_node_t *ptrA = headOne;
+	ll_node_t *ptrB = headTwo;
+
+	while (ptrA != ptrB) { 
+		ptrA = ptrA ? ptrA->next : headTwo;
+		ptrB = ptrB ? ptrB->next : headOne;
+	}
+
+	return ptrA;
+}
+
+ll_node_t * merge(ll_node_t * l1, ll_node_t * l2)
+{
+	ll_node_t * dump;
+	ll_node_t * cur = &dump;
+	
+	while (l1 != NULL && l2 != NULL) {
+		if (*(int *)l1->data < *(int *)l2->data) {
+			cur->next = l1;
+			l1 = l1->next;
+		} else {
+			cur->next = l2;
+			l2 = l2->next;
+		}
+			
+		cur = cur->next;
+	}
+	
+	if (l1 != NULL)
+		cur->next = l1;
+	else
+		cur->next = l2;
+		
+	return dump->next;
+}
+
+/* 148th problem from leetcod | sort a list with merge sort implementation */
+ll_node_t * sortList(ll_node_t * head) 
+{
+	if (head == NULL || head->next == NULL)
+		return head;
+	
+	ll_node_t * slow = head;
+	ll_node_t * fast = head->next;
+	
+	while (fast != NULL && fast->next != NULL) {
+		slow = slow->next;
+		fast = fast->next->next;
+	}
+	
+	fast = slow->next;
+	slow->next = NULL;
+	
+	return merge(sortList(head), sortList(fast));
+}
+
+
+/* 141th problem from leetcode | check if there is a cycle in the list */
+bool
+ll_is_cycle(ll_node_t *head)
+{
+	ll_node_t *fast, *slow;
+	fast = head;
+	slow = head;
+	
+	while (slow && fast && fast->next) {
+		fast = fast->next->next;
+		slow = slow->next;
+		if (fast == slow) 
+			return true;
+	}
+	return false;
 }
