@@ -115,31 +115,41 @@ static ll_node_t *find_key(linked_list_t *bucket, void *key,
 
 void ht_resize(hashtable_t *ht, uint key_size, uint value_size)
 {
-	hashtable_t *new_ht = ht_create(2 * ht->hmax, ht->hash_function, ht->compare_function);
-	int ok;
-	ll_node_t *current;
-	
+	int n = 2 * ht->hmax;
+	hashtable_t *new_ht = ht_create(n, ht->hash_function, ht->compare_function);
+
+
 	for (int i = 0; i < ht->hmax; i++) {
-		ok = 0;
-		if (ht->buckets[i]->head != NULL)
-			current = ht->buckets[i]->head;
-		
-		printf("ciao bella\n");
-		while (current) {
-			printf("facem puncte\n");
+		linked_list_t *bucket = ht->buckets[i];
+		ll_node_t *current = bucket->head;
+
+		for (int j = 0; j < bucket->size; j++) {
 			ht_put(new_ht, ((info_t *)current->data)->key, key_size, ((info_t *)current->data)->value, value_size);
-			if (current->next == NULL)
-				ok = 1;
-			ht_remove_entry(ht, ((info_t *)current->data)->key);
-			if (ok == 1)
-				break;
+			current = current->next;
 		}
-		free(ht->buckets[i]);
+		
 	}
+
+	for (int i = 0; i < ht->hmax; i++) {
+
+		while (ht->buckets[i]->head) {
+			ll_node_t *removed = ll_remove_nth_node(ht->buckets[i], 0);
+			free(((info_t *)removed->data)->value);
+			free(((info_t *)removed->data)->key);
+			free(removed->data);
+			free(removed);
+		}
+
+		free(ht->buckets[i]);		
+	}
+
 	free(ht->buckets);
 
 	ht->buckets = new_ht->buckets;
-	ht->hmax = 2 * ht->hmax;
+	ht->hmax = n;
+	printf("salutik\n");
+	printf("ala nou %d \n", new_ht->hmax);
+	printf("%d \n", ht->hmax);
 	
 	free(new_ht);
 }
@@ -180,12 +190,11 @@ ht_put(hashtable_t *ht, void *key, unsigned int key_size,
 	} else {
 		memcpy(((info_t *)node->data)->value, value, value_size);
 	}
-
-	if ((double) ht->size / ht->hmax > RESIZE_CONST)
-		ht_resize(ht, key_size, value_size);
-
 	
 	ht->size++;
+	
+	if ((double) ht->size / ht->hmax > RESIZE_CONST)
+		ht_resize(ht, key_size, value_size);
 }
 
 void *

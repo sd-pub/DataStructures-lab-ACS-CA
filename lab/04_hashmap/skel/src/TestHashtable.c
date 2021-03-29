@@ -77,7 +77,7 @@ main()
 	strcpy(informatii_prieteni[7].mancare_preferata, "pizza");
 
 	/* Initializare hashtable_t. */
-	ht_prieteni = ht_create(10, hash_function_string,
+	ht_prieteni = ht_create(5, hash_function_string,
 				compare_function_strings);
 
 	/* Put si get pentru o singura cheie. */
