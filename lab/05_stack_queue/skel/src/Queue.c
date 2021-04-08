@@ -92,6 +92,7 @@ q_clear(queue_t *q)
 		q->size--;
 	}
 
+	q->write_idx = 0;
 }
 
 void

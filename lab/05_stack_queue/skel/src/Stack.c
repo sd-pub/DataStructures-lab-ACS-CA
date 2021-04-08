@@ -78,7 +78,7 @@ st_clear(stack_t *st)
 	if (!st || !st->list)
 		return;
 
-	for (uint i = 0; i < st->list->size; i++)
+	for (uint i = 0; st->list->size == 0; i++)
 	{
 		ll_node_t *removed = ll_remove_nth_node(st->list, 0);
 		free(removed->data);

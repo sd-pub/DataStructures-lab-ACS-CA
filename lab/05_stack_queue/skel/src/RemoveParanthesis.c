@@ -23,9 +23,10 @@ int main(void)
 			err = 1;
 			break;
 		} else {
-			if ((string[i] == ')' && *(char *)st_peek(stack) != '(') ||
-				(string[i] == '}' && *(char *)st_peek(stack) != '{') ||
-				(string[i] == ']' && *(char *)st_peek(stack) != '[') ) {
+			char top_elem = *(char *)st_peek(stack);
+			if ((string[i] == ')' && top_elem != '(') ||
+				(string[i] == '}' && top_elem != '{') ||
+				(string[i] == ']' && top_elem != '[') ) {
 				err = 1;
 				break;
 			}
