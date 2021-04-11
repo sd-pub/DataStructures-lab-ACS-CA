@@ -29,16 +29,19 @@ void push_stack(queue_t *f_q, queue_t *s_q, void *new_data)
 	swap_queues(&f_q, &s_q);
 }
 
-void pop_stack(queue_t *f_q, queue_t *s_q, int * elem)
+int pop_stack(queue_t *f_q, queue_t *s_q)
 {
+	int elem;
 	while(f_q->size > 1) {
 		q_enqueue(s_q, q_front(f_q));
 		q_dequeue(f_q);
 	}
 
-	*elem = *(int *)q_front(f_q);
+	elem = *(int *)q_front(f_q);
 	q_dequeue(f_q);
 	swap_queues(&f_q, &s_q);
+
+	return elem;
 }
 
 int main(void)
@@ -52,12 +55,12 @@ int main(void)
 
 	// push effective
 	push_stack(q1, q2, &numbers[5]);
-	printf("%d", *(int *)q2->buff[q2->read_idx]);
+	printf("%d", *(int *)q_front(q2));
 	q_dequeue(q1);
 
 	// pop effective
 	q_enqueue(q1, &numbers[6]);
-	pop_stack(q1, q2, &elem);
+	elem = pop_stack(q1, q2);
 	fprintf(stdout, "%d\n", elem);
 
 	q_free(q1);
