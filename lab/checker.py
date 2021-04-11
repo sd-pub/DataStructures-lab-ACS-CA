@@ -33,6 +33,7 @@ labs = {
             "points": [50],
             "tasks" : 1 },
     4   : { "name" : "04_hashmap",
+            "points" : [50],
             "tasks" : 1 },
     5   : { "name" : "05_stack_queue",
             "tasks" : 1 },
