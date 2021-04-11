@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "Queue.h"
+#include "utils.h"
 
 typedef struct
 {
@@ -46,24 +47,29 @@ int pop_stack(queue_t *f_q, queue_t *s_q)
 
 int main(void)
 {
-	queue_t *q1, *q2;
+	new_stack_t *st;
 	int numbers[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	int elem;
 
-	q1 = q_create(sizeof(int), 5);
-	q2 = q_create(sizeof(int), 5);
+	st = malloc(sizeof(*st));
+	DIE(NULL == st, "malloc failed");
+
+	st->f_q = q_create(sizeof(int), 5);
+	st->s_q = q_create(sizeof(int), 5);
 
 	// push effective
-	push_stack(q1, q2, &numbers[5]);
-	printf("%d", *(int *)q_front(q2));
-	q_dequeue(q1);
+	push_stack(st->f_q, st->s_q, &numbers[5]);
+	printf("%d\n", *(int *)q_front(st->s_q));
+	q_dequeue(st->f_q);
 
 	// pop effective
-	q_enqueue(q1, &numbers[6]);
-	elem = pop_stack(q1, q2);
+	q_enqueue(st->f_q, &numbers[6]);
+	elem = pop_stack(st->f_q, st->s_q);
 	fprintf(stdout, "%d\n", elem);
 
-	q_free(q1);
-	q_free(q2);
+	
+	q_free(st->f_q);
+	q_free(st->s_q);
+	free(st);
 	return 0;
 }
