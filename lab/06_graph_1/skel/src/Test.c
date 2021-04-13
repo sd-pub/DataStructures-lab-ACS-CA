@@ -157,28 +157,21 @@ bfs_matrix_graph(matrix_graph_t* mg, int node, int* visited)
 void
 floyd_warshall(matrix_graph_t* mg)
 {
-	for (int i = 0; i < mg->nodes; i++) {
-		for (int j = 0; j < mg->nodes; j++) {
+	for (int i = 0; i < mg->nodes; i++)
+		for (int j = 0; j < mg->nodes; j++)
 			if (mg->matrix[i][j] == 0 && i != j)
 				mg->matrix[i][j] = MAX_INT;
-		}
-	}
 
-	for (int k = 0; k < mg->nodes; k++) {
-    	for (int i = 0; i < mg->nodes; i++) {
-        	for (int j = 0; j < mg->nodes; j++) {
+	for (int k = 0; k < mg->nodes; k++)
+    	for (int i = 0; i < mg->nodes; i++)
+        	for (int j = 0; j < mg->nodes; j++)
 				if (mg->matrix[i][j] > mg->matrix[i][k] + mg->matrix[k][j])
 					mg->matrix[i][j] = mg->matrix[i][k] + mg->matrix[k][j];
-        	}
-   		}
-	}
 
-	for (int i = 0; i < mg->nodes; i++) {
-		for (int j = 0; j < mg->nodes; j++) {
+	for (int i = 0; i < mg->nodes; i++)
+		for (int j = 0; j < mg->nodes; j++)
 			if (mg->matrix[i][j] == MAX_INT && i != j)
 				mg->matrix[i][j] = 0;
-		}
-	}
 }
 
 int
@@ -286,5 +279,6 @@ main()
 
 	lg_free(lg);
 	mg_free(mg);
+
 	return 0;
 }
