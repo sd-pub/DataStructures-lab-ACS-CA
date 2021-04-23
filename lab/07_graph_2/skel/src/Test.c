@@ -19,16 +19,14 @@ dfs_connected_comps(list_graph_t *lg, int node, int *visited,
 					linked_list_t *component)
 {
 	stack_t *stack = st_create(sizeof(int));
-	// component = ll_create(sizeof(int));
 
 	st_push(stack, &node);
 
 	while (!st_is_empty(stack)) {
 		int s = *(int *)st_peek(stack);
 		st_pop(stack);
-		ll_add_nth_node(component, 0, &s);
 		if (!visited[s]) {
-			// printf("%d ", s);
+			ll_add_nth_node(component, 0, &s);
 			visited[s] = 1;
 		}
 
@@ -43,7 +41,6 @@ dfs_connected_comps(list_graph_t *lg, int node, int *visited,
 		}
 	}
 
-	ll_print_int(component);
 	printf("\n");
 	st_free(stack);
 }
@@ -59,16 +56,14 @@ connected_components(list_graph_t *lg, int *visited, unsigned int *num_comp)
 	if (!lg || !lg->neighbors)
 		return NULL;
 	
-	for (int i = 0; i != lg->nodes; ++i)
-		comps[i] = ll_create(sizeof(int));
 	
 	for (int i = 0; i < lg->nodes; i++) {
 		if (!visited[i]) {
-			++pos;
+			comps[++pos] = ll_create(sizeof(int));
 			dfs_connected_comps(lg, i, visited, comps[pos]);
 			*num_comp = *num_comp + 1;
 		}
-	}
+ 	}
 
 	return comps;
 }
@@ -96,7 +91,8 @@ topo_sort(list_graph_t *lg, int *visited)
 	while (!q_is_empty(q)) {
 		int node = *(int *)q_front(q);
 		q_dequeue(q);
-		ll_add_nth_node(sorted, 0, &node);
+		int n = sorted->size;
+		ll_add_nth_node(sorted, n, &node);
 
 		ll_node_t *current = lg_get_neighbours(lg, node)->head;
 		while (current) {
@@ -117,9 +113,7 @@ static void
 min_path(list_graph_t *lg, int start, int *dist)
 {
 	queue_t *q = q_create(sizeof(int), MAX_NODES);
-	int visited[MAX_NODES] = {0};
 
-	visited[start] = 1;
 	dist[start] = 0;
 	q_enqueue(q, &start);
 
@@ -130,8 +124,7 @@ min_path(list_graph_t *lg, int start, int *dist)
 		ll_node_t *current = lg_get_neighbours(lg, s)->head;
 		while (current) {
 			int next = *(int *)current->data;
-			if (!visited[next]) {
-				visited[next] = 1;
+			if (dist[next] == INF) {
 				dist[next] = dist[s] + 1;
 				q_enqueue(q, &next);
 			}
@@ -161,6 +154,7 @@ check_bipartite(list_graph_t *lg, int *color)
 				color[next] = (color[node] == 2) ? 1 : 2;
 				q_enqueue(q, &next);
 			} else if (color[node] == color[next]) {
+				q_free(q);
 				return 0;
 			}
 			current = current->next;
@@ -304,14 +298,14 @@ main(void)
 	// /* Ex 1 */
 	test_connected_comp();
 
-	/* Ex 2 */
-	test_topo_sort();
+	// /* Ex 2 */
+	// test_topo_sort();
 
-	// /* Ex 3 */
-	test_min_dist();
+	// // /* Ex 3 */
+	// test_min_dist();
 
-	// /* Ex 4 */
-	test_bipartite();
+	// // /* Ex 4 */
+	// test_bipartite();
 
 	return 0;
 }
