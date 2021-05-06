@@ -8,6 +8,32 @@
 
 #include "binary_tree.h"
 
+b_node_t *rotate_tree_to_right(b_node_t *root)
+{
+    if (!root->left)
+        return root;
+
+    b_node_t *left = root->left;
+    root->left = root->left->right;
+    left->right = root;
+
+    return left;
+}
+
+void freeO1 (b_node_t *root)
+{
+    while (root) {
+        if (!root->left) {
+            b_node_t *new_root = root->right;
+            free(root->data);
+            free(root);
+            root = new_root;
+        } else {
+            root = rotate_tree_to_right(root);
+        }
+    }
+}
+
 void read_tree(b_tree_t *b_tree)
 {
     int i, N, data;
@@ -47,7 +73,9 @@ int main(void)
     fprintf(stdout, "There length of the binary tree is of %d levels\n",
             full_length);
 
-    b_tree_free(b_tree, free);
+    freeO1(b_tree->root);
+    free(b_tree);
+    //b_tree_free(b_tree, free);
 
     return 0;
 }
