@@ -1,5 +1,5 @@
 /**
- * SD, 2020
+ * SD, 2021
  * 
  * Lab #9, BST & Heap
  * 
@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "heap.h"
+#include "utils.h"
 
 char to_lower(char c)
 {
@@ -37,56 +38,67 @@ int heap_cmp_str_lexicographically(const char *key1, const char *key2)
 
 int heap_cmp_teams(const team_t *key1, const team_t *key2)
 {
-    int score_diff = key2->score - key1->score;
+	int score_diff = key2->score - key1->score;
 
-    if (score_diff != 0)
-        return score_diff;
+	if (score_diff != 0)
+		return score_diff;
 
-    return heap_cmp_str_lexicographically(key1->name, key2->name);
+	return heap_cmp_str_lexicographically(key1->name, key2->name);
 }
 
 int main(void)
 {
-    heap_t *heap;
-    team_t team, tmp_team;
-    int N, task;
+	heap_t *heap;
+	team_t *team, *tmp_team;
+	int N = 0, task;
 
-    heap = heap_create(heap_cmp_teams);
-    team.name = malloc(BUFSIZ * sizeof(char));
-    if (team.name == NULL)
-        perror("team.name malloc");
+	heap = heap_create(heap_cmp_teams);
 
-    scanf("%d\n", &N);
+	team = malloc(sizeof(*team));
+	DIE(!team, "team malloc");
+	team->name = malloc(BUFSIZ * sizeof(*team->name));
+	DIE(!team->name, "team->name malloc");
 
-    while (N--) {
-        scanf("%d", &task);
-    
-        switch (task) {
-        case 1:
-            memset(team.name, 0, BUFSIZ);
-            scanf("%s %d", team.name, &team.score);
-            heap_insert(heap, &team);
-            break;
-        case 2:
-            if (!heap_empty(heap)) {
-                tmp_team = heap_top(heap);
-                printf("%s %d\n", tmp_team.name, tmp_team.score);
-            }
-            break;
-        case 3:
-            if (!heap_empty(heap)) {
-                heap_pop(heap);
-            }
-            break;
-        default:
-            perror("Invalid task!");
-        }
-    }
+	scanf("%d", &N);
+	fflush(stdout);
 
-    /* Afisati clasamentul echipelor */
+	while (N--) {
+		scanf("%d", &task);
+	
+		switch (task) {
+		case 1:
+			memset(team->name, 0, BUFSIZ);
+			scanf("%s %d", team->name, &team->score);
+			heap_insert(heap, team);
+			break;
+		case 2:
+			if (!heap_empty(heap)) {
+				tmp_team = heap_top(heap);
+				printf("%s %d\n", tmp_team->name, tmp_team->score);
+			}
+			break;
+		case 3:
+			if (!heap_empty(heap)) {
+				heap_pop(heap);
+			}
+			break;
+		default:
+			perror("Invalid task!");
+		}
+	}
 
-    free(team.name);
-    heap_free(heap);
+	/* TO DO: Afisati clasamentul echipelor */
 
-    return 0;
+	while (heap->size != 0) {
+		tmp_team = heap_top(heap);
+		printf("%s %d\n", tmp_team->name, tmp_team->score);
+		
+		heap_pop(heap);
+	}
+
+	free(team->name);
+	free(team);
+	heap_free(heap);
+
+	return 0;
 }
