@@ -353,7 +353,7 @@ __avl_delete(avl_node_t **node, void *value,
 	(*node)->height = 1 + __max(__height((*node)->left),
 								__height((*node)->right));
 
-	__avl_fix(&(*node));
+	__avl_fix(node);
 }
 
 void
