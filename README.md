@@ -1,2 +1,2 @@
-# data-structures-skel
-This repo includes the skel for the Data Structures class
+# data-structures-laboratory-CA
+This repo includes the solutions for the sd-laboratories for ACS Computer Science - series CA.
