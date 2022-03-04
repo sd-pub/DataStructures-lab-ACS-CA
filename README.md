@@ -1,2 +1,2 @@
-# data-structures-skel
-This repo includes the skel for the Data Structures class
+# 311CA - Mihai Ramsi Soare - DATA STRUCTURES LABORATORY - CA
+This repo includes the solutions for the sd-laboratories for ACS Computer Science - series CA.
